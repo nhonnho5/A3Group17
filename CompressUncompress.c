@@ -6,25 +6,31 @@
 /*CompressUncompress.out*/
 
 void compress_file() {
-    FILE *source, *destination;
     
-    source = fopen(FILENAME, "r");
-    if (source == NULL) {
-        printf("File does not exist. \n");
-    }
-    
-    destination = fopen("compressed_passwords.txt", "w");
-
     char currentChar;
     char previousChar = EOF;
     unsigned int count = 1;
+    
+    FILE *source, *destination;
+    
+    source = fopen(FILENAME, "r");
+
+    if (source == NULL) { /*check if file exist*/
+        printf("File does not exist. \n");
+    }
+    
+    destination = fopen("compressed_passwords.txt", "w"); /*open a new file to write the new data*/
 
     int iteration = 0;
 
     while (1) {
         
-        currentChar = fgetc(source); /*get next char*/
+        currentChar = fgetc(source); /*get next char in file. In the first iteration, the first char*/
         
+        if (currentChar == NULL){
+            printf("File is empty. \n"); /*check if file is empty*/
+            break;
+        }
         if (currentChar == EOF) { /*check if the cursor is at the end of line*/
             break;
         }
@@ -39,50 +45,59 @@ void compress_file() {
             count = 1;
         } 
         
-        previousChar = currentChar; /*let previousChar hold the same value as this one, move onto the next one*/
-        iteration++;
+        previousChar = currentChar; /*let previousChar hold the same value as the current one, move onto the next one*/
+        iteration++; /*count the iteration to separate it from the first one*/
         
-        if (currentChar == '\n') { /*check for password in the file*/
+        if (currentChar == '\n') { /*ì the file has multiple lines, reset the iteration count*/
             iteration = 0;
         }
-
     }
+
     fclose(destination);
     fclose(source);
 }
 
 void uncompress_file() {
+    
     char currentChar;
     char previousChar = EOF;
     int count;
+    
     FILE *source, *destination;
 
     source = fopen("compressed_passwords.txt", "r");
-    if (source == NULL) {
+
+    if (source == NULL) { /*check if file exist*/
         printf("File does not exist. \n");
     }
     
-    destination = fopen("encrypted_passwords.txt", "w");
+    destination = fopen("encrypted_passwords.txt", "w"); /*open the new file to store the encrypted password*/
 
 
     while(1) {
         currentChar = fgetc(source);
-        
-        if (currentChar == EOF) {
+
+        if (currentChar == NULL){
+            printf("File is empty. \n"); /*check if file is empty*/
             break;
-        } 
-        
-        if (currentChar == '\n') { 
+        }
+        if (currentChar == EOF) { /*end when get to end of file*/
+            break;
+        }
+
+        if (currentChar == '\n') { /*If it's a new line, get to next char*/
             currentChar = fgetc(source);
             fputc('\n', destination);
         }
-        
-        previousChar = currentChar;
+         
+        /*get 2 char: previousChar indicate the characters that got compressed, 
+        while the currentChar will be the number of time previousChar appear*/
+        previousChar = currentChar; 
         currentChar = fgetc(source);
 
-        sscanf(&currentChar, "%d", &count);
+        sscanf(&currentChar, "%d", &count); /*convert currentChar to int*/
         
-        while (count > 0) {
+        while (count > 0) { /*decompress the string*/
             fputc(previousChar, destination);
             count--;
         }
@@ -98,4 +113,5 @@ int main() {
 
     return 0;
 }
+
 
