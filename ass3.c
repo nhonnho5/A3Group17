@@ -68,5 +68,7 @@ void printMenu(void){
      "3. Compress a file.\n"
      "4. Decompress a file (requires a compressed file).\n"
      "5. Close the program.\n"
+     "NOTE: This program overwrites the output file(s) whenever \n
+     decompression or decryption is run. Save your content first!\n"
      "Enter your choice>\n");
 }
