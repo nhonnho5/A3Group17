@@ -3,6 +3,9 @@
 
 #define FILENAME "test.txt"
 
+/*gcc -Wall -Werror -ansi -o EncryptDecrypt.out EncryptDecrypt.c -lm*/
+/*./EncryptDecrypt.out*/
+
 void encrypt_file() {
     char ch;
     FILE *f, *temp;
@@ -18,6 +21,10 @@ void encrypt_file() {
     
     while(1) {
         ch = fgetc(f);
+        if (ch == NULL){
+            printf("File is empty. \n"); /*check if file is empty*/
+            break;
+        }
         if (ch == EOF) {
             break;
         } else {         /* using substitution ciphering to encrypt data */
@@ -61,6 +68,10 @@ void decrypt_file() {
     
     while(1) {
         ch = fgetc(f);
+        if (ch == NULL){
+            printf("File is empty. \n"); /*check if file is empty*/
+            break;
+        }
         if (ch == EOF) {
             break;
         } else {
@@ -74,6 +85,6 @@ void decrypt_file() {
 }
 int main() {
 
-
+    decrypt_file();
     return 0;
 }
