@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define FILENAME "encrypted_passwords.txt"
+#define FILENAME "test.txt"
 /*gcc -Wall -Werror -ansi -o CompressUncompress.out CompressUncompress.c -lm*/
 /*CompressUncompress.out*/
 
@@ -13,7 +13,7 @@ void compress_file() {
     
     FILE *source, *destination;
     
-    source = fopen(FILENAME, "r");
+    source = fopen("test.txt", "r");
 
     if (source == NULL) { /*check if file exist*/
         printf("File does not exist. \n");
@@ -85,12 +85,16 @@ void uncompress_file() {
         if (currentChar == EOF) { /*end when get to end of file*/
             break;
         }
+        if (currentChar == '\n'){
+            fputc('\n', destination);
+            currentChar = fgetc(source);
+        }
         /*get 2 char: previousChar indicate the characters that got compressed, 
         while the currentChar will be the number of time previousChar appear*/
         previousChar = currentChar; 
         currentChar = fgetc(source);
-
-        sscanf(&currentChar, "%d", &count); /*convert currentChar to int*/
+        
+        count = currentChar - '0';
         
         while (count > 0) { /*decompress the string*/
             fputc(previousChar, destination);
@@ -104,7 +108,7 @@ void uncompress_file() {
 }
 int main() {
 
-    compress_file();
+    uncompress_file();
 
     return 0;
 }
