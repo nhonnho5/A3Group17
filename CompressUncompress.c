@@ -26,15 +26,20 @@ void compress_file() {
     while (1) {
         
         currentChar = fgetc(source); /*get next char in file. In the first iteration, the first char*/
-        
-        if (currentChar == NULL){
+
+        if (source == NULL){
             printf("File is empty. \n"); /*check if file is empty*/
             break;
         }
         if (currentChar == EOF) { /*check if the cursor is at the end of line*/
             break;
         }
-        if (iteration == 0) { /*check fist iteration*/
+        if (iteration == 0) { /*check fist iteration. Input a char '`' to mark it as has been compressed*/
+            if (currentChar == '~'){
+                printf("File has been encrypted. Compressing ...");
+                currentChar = fgetc(source);
+            }
+            fputc('`', destination);
             fputc(currentChar, destination);
         } else if (currentChar == previousChar) { /*increase count if previous char is the same as this one*/
             count++;
@@ -55,6 +60,8 @@ void compress_file() {
 
     fclose(destination);
     fclose(source);
+
+    printf("File compressed \n");
 }
 
 void uncompress_file() {
@@ -73,23 +80,26 @@ void uncompress_file() {
     
     destination = fopen("encrypted_passwords.txt", "w"); /*open the new file to store the encrypted password*/
 
+    currentChar = fgetc(source); /*check first char to see if file has been compressed*/
+
+        if (currentChar != '`'){
+            printf("File is not compressed yet. Please compressed file first.\n");
+            fclose(source);
+            return;
+        }
+
+    fputc('~', destination);
 
     while(1) {
         currentChar = fgetc(source);
 
-        if (currentChar == NULL){
+        if (source == NULL){
             printf("File is empty. \n"); /*check if file is empty*/
             break;
         }
         if (currentChar == EOF) { /*end when get to end of file*/
             break;
         }
-
-        if (currentChar == '\n') { /*If it's a new line, get to next char*/
-            currentChar = fgetc(source);
-            fputc('\n', destination);
-        }
-         
         /*get 2 char: previousChar indicate the characters that got compressed, 
         while the currentChar will be the number of time previousChar appear*/
         previousChar = currentChar; 
