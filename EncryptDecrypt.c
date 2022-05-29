@@ -42,7 +42,7 @@ void encrypt_file() {
     fclose(temp);
 
     /* encrypting initial file by copying contents of the temp file */
-    f = fopen(FILENAME, "w");
+    /*f = fopen(FILENAME, "w");
     temp = fopen("encrypted_passwords.txt", "r");
     
     while (1) {
@@ -52,7 +52,7 @@ void encrypt_file() {
         } else {
             fputc(ch, f);
         }
-    }
+    }*/
 
     fclose(f);
     fclose(temp);
