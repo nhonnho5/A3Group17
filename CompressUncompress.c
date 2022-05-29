@@ -34,12 +34,7 @@ void compress_file() {
         if (currentChar == EOF) { /*check if the cursor is at the end of line*/
             break;
         }
-        if (iteration == 0) { /*check fist iteration. Input a char '`' to mark it as has been compressed*/
-            if (currentChar == '~'){
-                printf("File has been encrypted. Compressing ...");
-                currentChar = fgetc(source);
-            }
-            fputc('`', destination);
+        if (iteration == 0) { /*check fist iteration*/
             fputc(currentChar, destination);
         } else if (currentChar == previousChar) { /*increase count if previous char is the same as this one*/
             count++;
@@ -80,16 +75,6 @@ void uncompress_file() {
     
     destination = fopen("encrypted_passwords.txt", "w"); /*open the new file to store the encrypted password*/
 
-    currentChar = fgetc(source); /*check first char to see if file has been compressed*/
-
-        if (currentChar != '`'){
-            printf("File is not compressed yet. Please compressed file first.\n");
-            fclose(source);
-            return;
-        }
-
-    fputc('~', destination);
-
     while(1) {
         currentChar = fgetc(source);
 
@@ -119,7 +104,7 @@ void uncompress_file() {
 }
 int main() {
 
-    uncompress_file();
+    compress_file();
 
     return 0;
 }
